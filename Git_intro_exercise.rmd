@@ -1,0 +1,78 @@
+---
+title: "Coding Exercises"
+author: "BBrown"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+packageLoad <-
+  function(x) {
+    for (i in 1:length(x)) {
+      if (!x[i] %in% installed.packages()) {
+        install.packages(x[i])
+      }
+      library(x[i], character.only = TRUE)
+    }
+  }
+```
+
+
+
+```{r}
+packageLoad(c("tidyverse", "palmerpenguins", "rmarkdown", "ggthemes", "RColorBrewer", "viridis", "ggdark", "plotly", "lterdatasampler", "rstatix", "dplyr", "lubridate"))
+```
+
+
+```{r}
+data("knz_bison")
+```
+
+
+
+
+```{r}
+bison_age <- knz_bison %>%
+  mutate(age = rec_year - animal_yob)
+
+head(bison_age)
+
+
+
+```
+
+
+
+```{r}
+filter_by_weight <- function(data, weight_threshold) {
+  data %>%
+    filter(animal_weight > weight_threshold)
+}
+
+
+bison_filtered <- filter_by_weight(bison_age, 400)
+head(bison_filtered)
+
+```
+
+
+
+```{r}
+ggplot(bison_age, aes(x = animal_sex, y = animal_weight, fill = animal_sex)) +
+  geom_boxplot() +
+  labs(
+    title = "Bison Weight by Sex",
+    x = "Sex",
+    y = "Weight (kg)"
+  ) +
+  theme_minimal()
+
+t_test_result <- t.test(animal_weight ~ animal_sex, data = bison_age)
+t_test_result
+
+```
+
